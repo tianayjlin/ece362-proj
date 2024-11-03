@@ -12,7 +12,7 @@
 void internal_clock();
 
 void init_all(){
-    //put all gpio and peripheral initilizations in here
+    //put all gpio and peripheral initilizations in here  
 }
 
 int main (){
