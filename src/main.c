@@ -23,6 +23,6 @@ int main (){
 
     init_all();
     
-    
+    print_tft();
     return 0; 
 }
