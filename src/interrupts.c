@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "interrupts.h"
-#include "timers.h"
+#include "timer.h"
 #include "ps2.h"
 
 //insert function definitions here
