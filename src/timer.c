@@ -2,10 +2,6 @@
 
 //insert function declarations here
 
-
-
-
-
   void setup_tim7() {
   RCC->APB1ENR |= RCC_APB1ENR_TIM7EN;
   TIM7->PSC = 48000-1;
