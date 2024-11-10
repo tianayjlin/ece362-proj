@@ -6,5 +6,6 @@
 
 
 //INSERT FUNCTION DECLARATIONS HERE 
+void TIM7_IRQHandler(void);
 
 #endif

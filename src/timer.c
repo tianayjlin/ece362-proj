@@ -10,3 +10,5 @@
   NVIC->ISER[0] |= 1 << TIM7_IRQn;
   TIM7->CR1 |= TIM_CR1_CEN;
 }
+
+

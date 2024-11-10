@@ -3,4 +3,6 @@
 
 //insert function declarations here
 
+void setup_tim7(void);
+
 #endif
