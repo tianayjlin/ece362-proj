@@ -5,6 +5,9 @@
 #include "timer.h"
 #include "ps2.h"
 #include "interrupts.h"
+#include "gamelogic.h"
+
+#define BUFFER_SIZE 2048
 // #include <stdint.h>
 // #include <stdio.h>
 // #include <fifo.h>
@@ -22,7 +25,14 @@ int main (){
     internal_clock();
 
     init_all();
-    
-    print_tft();
+
+    char buffer [BUFFER_SIZE];
+    const char* filename = "handmaids_tale.txt";
+
+    get_file(filename, buffer);
+    print_tft(buffer);
+
+    int high_score = get_high_score();
+
     return 0; 
 }

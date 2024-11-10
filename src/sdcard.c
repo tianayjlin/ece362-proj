@@ -7,6 +7,23 @@
 #include "lcd.h"
 #include "diskio.h"
 
+#define BUFFER_SIZE 2048
+#define FONT_SIZE 16
+#define MAX_LINES LCD_H / FONT_SIZE
+#define LINE_HEIGHT FONT_SIZE
+#define CHAR_WIDTH FONT_SIZE / 2
+#define NUM_CHARS_PER_LINE lcddev.width - CHAR_WIDTH //minus to account for space
+/**
+ * ^Hardware Configurations
+ * @fn init_spi1_slow(): confgigures SPI1, GPIOMODER/AFR regs
+ * @fn enable_sdcard()
+ * @fn disable_sdcard()
+ * @fn init_sdcard_io(): init spi1 slow, disable sd card
+ * @fn sdcard_io_highspeed(): /256 baud rate to /4 baud rate (12MHz)
+ * 
+ * @fn init_lcd_spit(): lcd pin config, calls init_spi1_slow() an sdcard_io_highspeed()
+ */
+
 void init_spi1_slow(){
     //configure SPI1 AND GPIOB MODER AND AFR registers for pins 
     //PB3 (SCK), PB4 (MISO), and PB5 (MOSI).
@@ -43,8 +60,9 @@ void init_sdcard_io(){
     init_spi1_slow(); 
     
     // //configure PB2 as an output
-    // RCC -> AHBENR |= RCC_AHBENR_GPIOBEN; 
-    GPIOB -> MODER |= GPIO_MODER_MODER2_0;
+    //clock has already been enabled in init_spi1_slow() and not disabled
+    //set as output
+        GPIOB -> MODER |= GPIO_MODER_MODER2_0;
 
     disable_sdcard();
 }
@@ -72,29 +90,67 @@ void init_lcd_spi(){
     
 }
 
-void print_tft(void){  
-    
-    //lcd init is not defined in the lcd.h
-    
 
-    FIL fp;  //jfile pointer
-    FATFS fs; //file structure
+/**
+ * ^Getting Words + Display
+ * @fn get_file(): loads <buffer> with information from <filename>
+ * @fn print_tft(): print the file in 
+ */ 
+
+/**
+ * @example 
+ * 
+ *  char buffer [BUFFER_SIZE];
+    const char* filename = "abc.txt";
+
+    get_file(filename, buffer);
+ *
+ *
+ */
+void get_file(const char* filename, char* buffer){
+    FIL fp;
+    FATFS fs; 
+    
+    //TODO: IMPLEMENT A DELAY FUNCTION IF SD CARD NOT READY
 
     //load abc.txt into fs, mounts sd card readable
     FRESULT mount = f_mount(&fs, "", 1);
 
     //load file into file pointer fp
-    FRESULT open = f_open(&fp, "top200_1.txt", FA_READ);
+    FRESULT open = f_open(&fp, filename, FA_READ);
 
-    long int size = 10000;
-    char buffer[size]; //makes sure that this matches the number of bytes btr (each element in an array is a byte)
+
     UINT br; //records the total amount of bytes read
-    FRESULT read = f_read(&fp, buffer, size, &br);
+    FRESULT read = f_read(&fp, buffer, BUFFER_SIZE, &br);
     
     //"fclose"
     FRESULT unmount = f_mount(&fs, NULL, 0);
+}
+
+void print_tft(const char* buffer){  
     LCD_Setup(); 
     // enable_sdcard();
     LCD_Clear(BLACK);     
-    LCD_DrawTXT(0, 0, WHITE, BLACK, buffer, 16, 0);
+    LCD_DrawTXT(0, 0, WHITE, BLACK, buffer, FONT_SIZE, 0);
 }
+
+
+
+/**
+ * ^Invoke within keyboard IRQ Handlers
+ * keyboard should increment the pointer along for every key press
+ */
+
+void wrong_key(u16 x, u16 y, char c){
+    LCD_DrawChar(x, y, WHITE, RED, c, FONT_SIZE, 0);
+}
+
+void right_key(u16 x, u16 y, char c){
+    LCD_DrawChar(x, y, WHITE, GRAY, c, FONT_SIZE, 0);
+}
+
+
+void increment_char_xy(u16* x, u16* y, int word_length){
+    //TODO 
+}
+
