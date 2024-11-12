@@ -1,7 +1,7 @@
 #ifndef INTERRUPTS_H
 #define INTERRUPTS_H 
 
-#include "timers.h"
+#include "timer.h"
 #include "ps2.h"
 
 

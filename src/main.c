@@ -21,7 +21,11 @@ int main (){
     internal_clock();
 
     init_all();
+    
 
+    init_spi1();
+    spi1_init_oled();
+    spi1_display1("hello");
     
     return 0; 
 }
