@@ -11,13 +11,16 @@
 #include "diskio.h"
 
 //insert function definitions here
-int GAMETIME = 15; // needs to be set to 15 when the game starts
+
+int volatile GAMETIME = 15; // needs to be set to 15 when the game starts
 char buf[16];
 
 void TIM7_IRQHandler(){
   TIM7->SR &= ~TIM_SR_UIF;
   GAMETIME -= 1;
   write_display();
+  spi1_display1(buf);
+
   }
 
 void write_display() {
