@@ -2,6 +2,10 @@
     "files.associations": {
         "stm32f0xx.h": "c",
         "diskio.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "sdcard.h": "c",
+        "timer.h": "c",
+        "ps2.h": "c",
+        "ff.h": "c"
     }
 }
