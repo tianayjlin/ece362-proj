@@ -5,25 +5,18 @@
 #define N 1000
 #define RATE 20000
 short int wavetable[N];
-int step0 = 0;
+int step0 = (1000 * N / RATE) * (1<<16);
 int offset0 = 0;
-
-void nano_wait(unsigned int n) {
-    asm(    "        mov r0,%0\n"
-            "repeat: sub r0,#83\n"
-            "        bgt repeat\n" : : "r"(n) : "r0", "cc");
-}
 
 //============================
 //plays a beep noise, called when wrong key is pressed
 void wrong_keypress_sound(void) {
-    init_wavetable();
-    set_freq();
-    setup_dac();
+    init_wavetable(); //main
+    setup_dac(); //main
     init_tim6();
 
-    //waits for 2.5 seconds
-    nano_wait(250000000);
+    //waits for .1 seconds
+    nano_wait(100000000);
 
     //turns off timer 6 enable to stop sine wave
     NVIC -> ISER[0] &= ~(1 << TIM6_IRQn);
@@ -39,14 +32,6 @@ void wrong_keypress_sound(void) {
 void init_wavetable(void) {
     for(int i=0; i < N; i++)
         wavetable[i] = 32767 * sin(2 * M_PI * i / N);
-}
-
-//============================================================================
-// set_freq()
-// Sets frequency to 1000 Hz sine wave.
-//============================================================================
-void set_freq(void) {
-    step0 = (1000 * N / RATE) * (1<<16);
 }
 
 //============================================================================
