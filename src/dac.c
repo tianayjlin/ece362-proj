@@ -5,8 +5,7 @@
 #define N 1000
 #define RATE 20000
 short int wavetable[N];
-int step0 = (1000 * N / RA
-TE) * (1<<16);
+int step0 = (1000 * N / RATE) * (1<<16);
 int offset0 = 0;
 
 //============================
