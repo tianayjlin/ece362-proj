@@ -5,6 +5,8 @@
 #include "timer.h"
 #include "ps2.h"
 #include "interrupts.h"
+#include "dac.h"
+
 // #include <stdint.h>
 // #include <stdio.h>
 // #include <fifo.h>
@@ -22,6 +24,12 @@ int main (){
     internal_clock();
 
     init_all();
+
+
+    while(1) {
+        wrong_keypress_sound();
+        nano_wait(1000000000);
+    }
     
     
     return 0; 

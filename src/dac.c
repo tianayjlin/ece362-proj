@@ -5,7 +5,8 @@
 #define N 1000
 #define RATE 20000
 short int wavetable[N];
-int step0 = (1000 * N / RATE) * (1<<16);
+int step0 = (1000 * N / RA
+TE) * (1<<16);
 int offset0 = 0;
 
 //============================
@@ -14,6 +15,8 @@ void wrong_keypress_sound(void) {
     init_wavetable(); //main
     setup_dac(); //main
     init_tim6();
+    
+    //DAC->DHR12R1 = 0;
 
     //waits for .1 seconds
     nano_wait(100000000);
@@ -21,6 +24,7 @@ void wrong_keypress_sound(void) {
     //turns off timer 6 enable to stop sine wave
     NVIC -> ISER[0] &= ~(1 << TIM6_IRQn);
     TIM6 -> CR1 &= ~(TIM_CR1_CEN);
+    //DAC->DHR12R1 = 0;
 }
 
 
@@ -76,7 +80,7 @@ void TIM6_DAC_IRQHandler() {
 // int samp = sum of wavetable[offset0>>16] and wavetable[offset1>>16]
   int samp = wavetable[offset0>>16];
 // multiply samp by volume
-  samp *= 4000; //0-4095
+  samp *= 2000; //0-4095
 
 // shift samp right by 17 bits to ensure it's in the right format for `DAC_DHR12R1` 
   samp = samp >> 17;
