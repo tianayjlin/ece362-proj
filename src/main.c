@@ -23,10 +23,10 @@ int main (){
     internal_clock();
 
     init_all();
-
+    void adjust_priorities();
     for(;;){
         int clock = 0;
-
+        
     }
     // while (1) {
     //     if ((GPIOC->IDR & GPIO_IDR_1) == 0) { // Check if PC1 (clock) is low

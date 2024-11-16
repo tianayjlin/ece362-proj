@@ -18,5 +18,7 @@ void init_keyboard();
 // void init_ps2();
 void init_exti ();
 void EXTI0_1_IRQHandler();
-int16_t bit_bang_data();
+void adjust_priorities();
+u_int16_t bit_bang_data();
+void dummyTest(char key);
 #endif

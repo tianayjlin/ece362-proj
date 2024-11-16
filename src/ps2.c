@@ -10,8 +10,11 @@
 // #include "gamelogic.h"
 
 //insert function definitions here 
-uint16_t msg = 0; //data msg of 12 bits? for the char
+uint16_t msg = 0; //data msg of 11 bits? for the char
 int ind = 0;
+char keyPress;
+int cor = -1;
+int int_count =0;
 
 static char keycodes[128] = {
     0,   27,  '1', '2', '3', '4', '5', '6', '7', '8', '9',  '0', '-',  '=',  '\b', '\t',                                                    /* <-- Tab */
@@ -42,8 +45,8 @@ static char keycodes[128] = {
 void init_keyboard(){//configure gpio pins accordingly with ps2
     RCC -> AHBENR |= RCC_AHBENR_GPIOCEN;
     GPIOC -> MODER &= ~(GPIO_MODER_MODER1 | GPIO_MODER_MODER0); //setting PC1, PC0 as inputs
-    GPIOC -> PUPDR &= ~(GPIO_PUPDR_PUPDR1);
-    GPIOC -> PUPDR |= GPIO_PUPDR_PUPDR1_0;//setting as pull up for clock
+    // GPIOC -> PUPDR &= ~(GPIO_PUPDR_PUPDR1);
+    // GPIOC -> PUPDR |= GPIO_PUPDR_PUPDR1_0;//setting as pull up for clock
     //PC1-> clock, PC0-> data
 }
 
@@ -59,19 +62,18 @@ void init_exti (){ //interrupt when clock goes low
 }
 
 
-int16_t bit_bang_data(){ // bit bang 11 bits of data and output ascii?
-    int32_t portc = (GPIOC-> IDR & 0b1);
-    int16_t data;//11 bits of data
+u_int16_t bit_bang_data(){ // bit bang 11 bits of data and output keycode?
+    u_int32_t portc = (GPIOC-> IDR & 0b1); //getting input data from PC0?
+    u_int16_t data;//11 bits of data
     //shifting in new data/overflow
-    if(ind < 11){
+    if(ind < 10){
         msg = (msg << 1) | portc; //shifting in new bit from data
         ind += 1;
     }
     else{//overflow
         ind = 0;
-        data = msg; //setting 11 bits of data to check parity
-        msg = portc; //setting to new bit
-        int16_t chars = data & 0x3FC; //isolating the 8 data bits
+        data = (msg << 1) | portc; //setting 11 bits of data to check parity
+        u_int16_t chars = data & 0x3FC; //isolating the 8 data bits
         int numOnes = 0;
         for (int i = 2; i< 10; i++){ //counting number of ones
             if ((data >> i) & 0x1){ //if digit at i is 1
@@ -82,16 +84,36 @@ int16_t bit_bang_data(){ // bit bang 11 bits of data and output ascii?
             //good data
             return chars;
         }
+        msg = 0;
     }
         return -1;
 }
+void dummyTest(char key){
+    if(key == 'a'){
+        cor = 1;
+    }
+    else{
+        cor = 0;
+    }
+}
+
+void adjust_priorities() {
+  NVIC_SetPriority(EXTI0_1_IRQn, 0x0);
+
+}
+
 void EXTI0_1_IRQHandler(){
     EXTI -> PR = EXTI_PR_PR1; //acknowledge pending on PC1
     //call fxn to bit bang from data line
-    int16_t key = bit_bang_data();
-    if(key > 0){
-        char keyPress = keycodes[key];
-    }
+    // int16_t key = bit_bang_data();
+    // if(key > 0){
+    //     keyPress = keycodes[key];
+    // }
+    int_count+=1;
+    // dummyTest(keyPress);
+    
+    //call game logic fxn for key presses?
+    
 }
 
 
