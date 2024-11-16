@@ -12,25 +12,28 @@
 
 //insert function definitions here
 
-int volatile GAMETIME = 15; // needs to be set to 15 when the game starts
-char buf[16];
+int volatile GAMETIME = 16; // needs to be set to 15 when the game starts, takes one second to initialize
+char buf[3];
 
 void TIM7_IRQHandler(){
   TIM7->SR &= ~TIM_SR_UIF;
   GAMETIME -= 1;
   write_display();
   spi1_display1(buf);
-
   }
 
 void write_display() {
-  if(GAMETIME >= 0){
+  if(GAMETIME >= 10){
     snprintf(buf, sizeof(buf), "%d\n", GAMETIME);
     return;
   }  
+  else if((GAMETIME)>0){
+    snprintf(buf, sizeof(buf), "%d\n", ("0"+(char)GAMETIME));
+  }
+
   else
   {
-    snprintf(buf, sizeof(buf), "%d\n", 0);
+    snprintf(buf, sizeof(1), "%d\n", 0);
     return;
   }
 

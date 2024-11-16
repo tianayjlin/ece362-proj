@@ -20,12 +20,14 @@ int main (){
     //INITIALIZATIONS
     internal_clock();
 
-    init_all();
+    //init_all();
+    
     
 
     init_spi1();
     spi1_init_oled();
     //spi1_display1("hello");
+    setup_tim7();
     
     return 0; 
 }
