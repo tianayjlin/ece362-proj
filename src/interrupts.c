@@ -34,6 +34,7 @@ void write_display() {
   else
   {
     snprintf(buf, sizeof(1), "%d\n", 0);
+    //end of game logic goes here
     return;
   }
 
