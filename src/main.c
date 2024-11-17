@@ -23,7 +23,7 @@ int main (){
     internal_clock();
 
     init_all();
-    void adjust_priorities();
+    // void adjust_priorities();
     for(;;){
         int clock = 0;
         
