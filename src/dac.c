@@ -12,18 +12,15 @@ int offset0 = 0;
 //plays a beep noise, called when wrong key is pressed
 void wrong_keypress_sound(void) {
     init_wavetable(); //main
-    setup_dac(); //main
+    setup_dac(); //mainRATE
     init_tim6();
     
-    //DAC->DHR12R1 = 0;
-
     //waits for .1 seconds
     nano_wait(100000000);
 
     //turns off timer 6 enable to stop sine wave
     NVIC -> ISER[0] &= ~(1 << TIM6_IRQn);
     TIM6 -> CR1 &= ~(TIM_CR1_CEN);
-    //DAC->DHR12R1 = 0;
 }
 
 
@@ -71,7 +68,8 @@ void TIM6_DAC_IRQHandler() {
 // increment offset0 by step0
   offset0 += step0;
 
-// if offset0 is >= (N << 16) decrement offset0 by (N << 16)
+// if offset0 is >= (N << 16)   NVIC -> ISER[0] |= 1 << TIM6_IRQn;
+decrement offset0 by (N << 16)
   if (offset0 >= (N << 16)) {
     offset0 -= (N << 16);
   }
@@ -109,4 +107,8 @@ void init_tim6(void) {
   TIM6 -> CR2 |= TIM_CR2_MMS_1;
   TIM6 -> CR2 &= ~(TIM_CR2_MMS_0 | TIM_CR2_MMS_2);
 
+}
+
+int tim6_seed(void) {
+  return TIM6 -> CNT;
 }

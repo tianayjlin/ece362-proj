@@ -22,3 +22,7 @@ void internal_clock()
     /* Wait till PLL is used as system clock source */
     while ((RCC->CFGR & (uint32_t)RCC_CFGR_SWS) != (uint32_t)RCC_CFGR_SWS_PLL);
 }
+
+int read_systick_val() {
+
+}
