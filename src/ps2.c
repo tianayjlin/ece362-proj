@@ -62,9 +62,9 @@ void init_exti (){ //interrupt when clock goes low
 }
 
 
-u_int16_t bit_bang_data(){ // bit bang 11 bits of data and output keycode?
-    u_int32_t portc = (GPIOC-> IDR & 0b1); //getting input data from PC0?
-    u_int16_t data;//11 bits of data
+uint16_t bit_bang_data(){ // bit bang 11 bits of data and output keycode?
+    uint32_t portc = (GPIOC-> IDR & 0b1); //getting input data from PC0?
+    uint16_t data;//11 bits of data
     //shifting in new data/overflow
     if(ind < 10){
         msg = (msg << 1) | portc; //shifting in new bit from data
@@ -73,7 +73,8 @@ u_int16_t bit_bang_data(){ // bit bang 11 bits of data and output keycode?
     else{//overflow
         ind = 0;
         data = (msg << 1) | portc; //setting 11 bits of data to check parity
-        u_int16_t chars = data & 0x3FC; //isolating the 8 data bits
+        uint16_t chars = data & 0x3FC; //isolating the 8 data bits
+        uint16_t reversed = reverseEnd(chars);
         int numOnes = 0;
         for (int i = 2; i< 10; i++){ //counting number of ones
             if ((data >> i) & 0x1){ //if digit at i is 1
@@ -82,7 +83,7 @@ u_int16_t bit_bang_data(){ // bit bang 11 bits of data and output keycode?
         }
         if(numOnes ^ ((data >> 1) & 0x1)){ //if numOnes is opposite of odd parity
             //good data
-            return chars;
+            return reversed;
         }
         msg = 0;
     }
@@ -95,6 +96,14 @@ void dummyTest(char key){
     else{
         cor = 0;
     }
+}
+
+uint16_t reverseEnd(uint16_t num){ //switching from lsb first to msb
+    uint16_t result = 0;
+    for(int i  = 0; i < 8; i++){
+        result += (num && (0b1 << i) << (7-i));
+    }
+    return result;
 }
 
 void adjust_priorities() {

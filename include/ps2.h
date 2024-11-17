@@ -19,6 +19,7 @@ void init_keyboard();
 void init_exti ();
 void EXTI0_1_IRQHandler();
 void adjust_priorities();
-u_int16_t bit_bang_data();
+uint16_t bit_bang_data();
 void dummyTest(char key);
+uint16_t reverseEnd(uint16_t num);
 #endif
