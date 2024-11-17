@@ -8,10 +8,6 @@
 #include "lcd.h"
 #include "diskio.h"
 
-
-
-
-
 //insert function declarations here
 
 void setup_tim7() {
