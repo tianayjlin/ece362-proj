@@ -9,11 +9,13 @@
 #include "fifo.h"
 #include "lcd.h"
 #include "diskio.h"
+#include <string.h>
 
 //insert function definitions here
 
 int volatile GAMETIME = 16; // needs to be set to 15 when the game starts, takes one second to initialize
-char buf[3];
+char buf[19];
+int HIGHSCORE = 180;  //for integration get_high_score();;
 
 void TIM7_IRQHandler(){
   TIM7->SR &= ~TIM_SR_UIF;
@@ -23,17 +25,16 @@ void TIM7_IRQHandler(){
   }
 
 void write_display() {
-  if(GAMETIME >= 10){
-    snprintf(buf, sizeof(buf), "%d\n", GAMETIME);
+  if(GAMETIME > 0){
+    snprintf(buf, sizeof(buf), "%d ", GAMETIME);
     return;
-  }  
-  else if((GAMETIME)>0){
-    snprintf(buf, sizeof(buf), "%d\n", ("0"+(char)GAMETIME));
   }
-
   else
   {
-    snprintf(buf, sizeof(1), "%d\n", 0);
+    snprintf(buf, sizeof(1), "%d ", 0);
+    //call high score function
+    nano_wait(100000000);
+    snprintf(buf, sizeof(buf), "high score: %d wpm", HIGHSCORE);
     //end of game logic goes here
     return;
   }
