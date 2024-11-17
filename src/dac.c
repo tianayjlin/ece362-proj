@@ -1,5 +1,5 @@
-#include "dac.h"
 #include "stm32f0xx.h"
+#include "dac.h"
 #include <math.h>
 
 #define N 1000
