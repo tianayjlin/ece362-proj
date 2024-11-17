@@ -12,7 +12,7 @@
 
 //insert related function declarations here 
 /**
- * ^Hardware Configurations
+ * ^Hardwa re Configurations
  * @fn init_spi1_slow(): confgigures SPI1, GPIOMODER/AFR regs
  * @fn enable_sdcard()
  * @fn disable_sdcard()
@@ -41,8 +41,11 @@ void print_tft(const char* buffer);
  * ^Keyboard Interaction
  * @fn wrong_key(): changes the current character to red 
  * @fn right_key(): greys out correct stuff
+ * @fn scroll(): scrolls the screen as the user is typing 
+ * @fn increment(): increments xy coords as well as location in file buffer. this helps us determine when to scroll
  */
 void wrong_key(u16 x, u16 y, char c);
 void right_key(u16 x, u16 y, char c);
-
+void scroll(char* buffer, char* p, int* line_offset); 
+void increment(u16* x, u16* y, char* buffer, char* p, int* offset); 
 #endif

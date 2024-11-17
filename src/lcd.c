@@ -954,6 +954,7 @@ void LCD_DrawTXT(u16 x,u16 y, u16 fc, u16 bg, const char *p, u8 size, u8 mode){
         // Check if the word fits on the current line
         if (x + wordWidth > maxLineWidth) {
             // Move to the next line if the word doesn't fit
+            
             x = startX;             // Reset x to the start of the line
             y += size;              // Move y down by one line height
             if (y > (lcddev.height - size)) {  // If y exceeds screen height, stop

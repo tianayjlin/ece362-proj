@@ -45,7 +45,7 @@ void init_spi1_slow(){
     SPI1 -> CR1 |= SPI_CR1_SPE; 
 }
 
-void enable_sdcard(){
+void enable_sdcard(){   
     //set pb2 low to enable SD CARD 
     GPIOB -> BSRR |= GPIO_BSRR_BR_2;
 }
@@ -110,13 +110,18 @@ void init_lcd_spi(){
 void get_file(const char* filename, char* buffer){
     FIL fp;
     FATFS fs; 
+    FRESULT mount = FR_NO_FILE; 
+
+    while(mount != FR_OK){
+        mount = f_mount(&fs, "", 1);
+        nano_wait(200000000);
+    }
+
     
-    //TODO: IMPLEMENT A DELAY FUNCTION IF SD CARD NOT READY
-
-    //load abc.txt into fs, mounts sd card readable
-    FRESULT mount = f_mount(&fs, "", 1);
-
     //load file into file pointer fp
+    // char *argv[20];
+    // argv[1] = "top200_1.txt";
+    // ls(0, argv);
     FRESULT open = f_open(&fp, filename, FA_READ);
 
 
@@ -124,7 +129,9 @@ void get_file(const char* filename, char* buffer){
     FRESULT read = f_read(&fp, buffer, BUFFER_SIZE, &br);
     
     //"fclose"
-    FRESULT unmount = f_mount(&fs, NULL, 0);
+    FRESULT close = f_close(&fp);
+    // FRESULT unmount = f_mount(NULL, "",  0);
+    FRESULT unmount = f_unmount("");
 }
 
 void print_tft(const char* buffer){  
@@ -137,8 +144,9 @@ void print_tft(const char* buffer){
 
 
 /**
- * ^Invoke within keyboard IRQ Handlers
- * keyboard should increment the pointer along for every key press
+ * ^Invoke within keyboard IRQ Handlers 
+ * @fn wrong_key
+ * @fn right_key
  */
 
 void wrong_key(u16 x, u16 y, char c){
@@ -149,8 +157,63 @@ void right_key(u16 x, u16 y, char c){
     LCD_DrawChar(x, y, WHITE, GRAY, c, FONT_SIZE, 0);
 }
 
+/**
+ * @param u16 x: current lcd coordinate
+ * 
+ */
+void scroll(char* buffer, char* p, int* line_offset){
 
-void increment_char_xy(u16* x, u16* y, int word_length){
-    //TODO 
+    //char* p is the last thing fitting on the curr screen
+    //force a null terminator into the buffer in order so all the completed text will still be greyed out
+    char temp = *(p + 1);
+    *(p + 1) = '\0'; 
+    
+    //start printing on offset. we know that this amount of data will fit with one line open
+    LCD_DrawTXT(0, 0, WHITE, GRAY, buffer + *line_offset, FONT_SIZE, 0);
+
+    //overwrite null terminator and continue printing from here
+    *(p + 1) = temp; 
+
+    //print as much as you can on the new line. 
+    LCD_DrawTXT(0, MAX_LINES - 1, WHITE, BLACK, p + 1, FONT_SIZE, 0);
+     
+    *line_offset = 0;
 }
+
+/**
+ * @example 
+ * incrment(&x, &y, buffer, p, &offset), where p initially points to buffer
+ */
+void increment(u16* x, u16* y, char* buffer, char* p, int* offset){
+
+    //wraparound for x (0 indexed)
+    *x = *x < NUM_CHARS_PER_LINE - 1 ? *x + CHAR_WIDTH : 0; 
+
+    //new line
+    if(*x == 0){
+        
+        //out of bounds, increment OR scroll
+        if  (*y > lcddev.height - FONT_SIZE){
+            
+            scroll(buffer, p, offset); 
+            *y -= LINE_HEIGHT; 
+        } 
+        else{
+            
+            //if the beginning of the new ine
+            if(!(*offset)){
+                *offset = p + 1 - buffer;
+            }
+
+            *y += LINE_HEIGHT;
+        }
+    }
+
+    //increment the file ptr
+    p++;
+}
+
+
+
+
 
