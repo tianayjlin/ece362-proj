@@ -24,13 +24,14 @@
  * @fn start_screen(): display initial user prompt
  */
 void start_screen(){
-    char start_buffer [32];
+    char* start_buffer = malloc(sizeof('a') * 32);
     const char* filename = "start.txt";
 
     get_file(filename, start_buffer);
     memset(start_buffer + 20, 0, sizeof(start_buffer)); //force everything to be a null terminator bc im sick of this shit 
     
     print_tft(start_buffer); 
+    free(start_buffer); 
 }
 
 /**
@@ -89,10 +90,10 @@ int get_high_score(){
  * @fn update_high_score(): saves updated high score
  */
 void update_high_score(int high_score){
-    //TODO TEST 
+ 
     FIL fp;
     FATFS fs; 
-    char buffer[8];
+    char* buffer = malloc(sizeof('a') * 8);
 
     //load file into .txt
     FRESULT mount = f_mount(&fs, "", 1);
@@ -107,9 +108,9 @@ void update_high_score(int high_score){
     
     
     f_close(&fp);
-    
-    //unmount file system
     f_mount(NULL, "", 1);
+    
+    free(buffer); 
 }
 
 /**

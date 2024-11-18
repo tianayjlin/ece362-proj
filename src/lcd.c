@@ -937,25 +937,39 @@ void LCD_DrawString(u16 x,u16 y, u16 fc, u16 bg, const char *p, u8 size, u8 mode
  * @brief support wrap around on txt files and longer strings
 */
 void LCD_DrawTXT(u16 x,u16 y, u16 fc, u16 bg, char *p, u8 size, u8 mode){
-    lcddev.select(1);
-    
-    u16 char_width = size / 2;     // Calculate the width of each character based on size
-    u16 max_line_width = lcddev.width - char_width;  // Maximum width for text on the current line
-    u16 max_lines = LCD_H / size; 
+lcddev.select(1);
 
-    char* ptr =  p;
+    u16 startX = x;               // Store the initial x position for line wrapping
+    u16 charWidth = size / 2;     // Calculate the width of each character based on size
+    u16 maxLineWidth = lcddev.width - charWidth;  // Maximum width for text on the current line
 
-    while(*ptr && *ptr != '\0'){
-        _LCD_DrawChar(x, y, fc, bg, *p, size, mode);
-
-        //wrap around on screen 
-        if(x + char_width > max_line_width && y < max_lines){
-            y++;
+    while (*p && *p != '\0') {
+        // Calculate the length of the next word
+        const char *wordEnd = p;
+        while (*wordEnd && *wordEnd != ' ' && *wordEnd != '\n') {
+            wordEnd++;  // Move to the end of the current word
         }
-        x = x < max_line_width ? x + char_width : 0; 
+        int wordLength = wordEnd - p;  // Length of the current word
+        int wordWidth = wordLength * charWidth;  // Pixel width of the current word
 
-        //next char!
-        ptr++;
+        // Check if the word fits on the current line
+        if (x + wordWidth > maxLineWidth) {
+            // Move to the next line if the word doesn't fit
+            
+            x = startX;             // Reset x to the start of the line
+            y += size;              // Move y down by one line height
+            if (y > (lcddev.height - size)) {  // If y exceeds screen height, stop
+                break;
+            }
+        }
+
+        // account for the space
+        wordEnd++;
+        while (p < wordEnd) {
+            _LCD_DrawChar(x, y, fc, bg, *p, size, mode);
+            x += charWidth;
+            p++;
+        }
     }
 
     lcddev.select(0);

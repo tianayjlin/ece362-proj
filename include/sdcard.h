@@ -12,7 +12,7 @@
 
 //insert related function declarations here 
 /**
- * ^Hardwa re Configurations
+ * ^Hardware Configurations
  * @fn init_spi1_slow(): confgigures SPI1, GPIOMODER/AFR regs
  * @fn enable_sdcard()
  * @fn disable_sdcard()
@@ -35,7 +35,7 @@ void init_lcd_spit();
  * @fn print_tft(): prints contents of a file loaded into buffer
  */
 void get_file(const char* filename, char* buffer);
-void pad_buffer(char* buffer, UINT br); 
+// void pad_buffer(char* buffer, UINT br); 
 void print_tft(const char* buffer); 
 
 /**
@@ -47,6 +47,6 @@ void print_tft(const char* buffer);
  */
 void wrong_key(u16 x, u16 y, char c);
 void right_key(u16 x, u16 y, char c);
-void scroll(char* buffer, char* p, int* line_offset); 
-void increment(u16* x, u16* y, char* buffer, char* p, int* offset); 
+// void scroll(char* buffer, char* p, int* line_offset); 
+void increment(u16* x, u16* y, char* buffer, char** p, int* offset); 
 #endif

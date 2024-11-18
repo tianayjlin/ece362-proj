@@ -135,50 +135,50 @@ void get_file(const char* filename, char* buffer){
     // FRESULT unmount = f_mount(NULL, "",  0);
     FRESULT unmount = f_unmount("");
 
-    pad_buffer(buffer, br);
+    // pad_buffer(buffer, br);
 }
 
 
-void pad_buffer(char* buffer, UINT br){
+// void pad_buffer(char* buffer, UINT br){
 
-    u16 x = 0; //start from the left on screen
-    char* p = buffer; //file ptr 
+//     u16 x = 0; //start from the left on screen
+//     char* p = buffer; //file ptr 
 
-    while(*p && *p != '\0'){
+//     while(*p && *p != '\0'){
 
-        char* word_end = p;
+//         char* word_end = p;
         
-        //determine mem loc of end of word
-        while (*word_end && *word_end != ' ' && *word_end != '\n') {
-            word_end++;  
-        }
+//         //determine mem loc of end of word
+//         while (*word_end && *word_end != ' ' && *word_end != '\n') {
+//             word_end++;  
+//         }
 
-        int word_char_count = ++word_end - p; // ++ accounts for space after the word 
-        int word_length_pix = word_char_count * CHAR_WIDTH;
+//         int word_char_count = ++word_end - p; // ++ accounts for space after the word 
+//         int word_length_pix = word_char_count * CHAR_WIDTH;
 
-        //number of spaces until out of bounds
-        int num_spaces = 0; 
+//         //number of spaces until out of bounds
+//         int num_spaces = 0; 
 
-        //checks to see if pixel offset is past the last one 
-        if(x + word_length_pix > X_MAX_CHARS_PIX){
+//         //checks to see if pixel offset is past the last one 
+//         if(x + word_length_pix > X_MAX_CHARS_PIX){
             
-            num_spaces = ceil((float)((LCD_W - x))/ CHAR_WIDTH);
-            int size = (int)(br) - (p - buffer); //size is number of stuff to move from p to end 
+//             num_spaces = ceil((float)((LCD_W - x))/ CHAR_WIDTH);
+//             int size = (int)(br) - (p - buffer); //size is number of stuff to move from p to end 
 
-            memmove(p + num_spaces, p, size); //shifts word over
-            // p[size - 1 + num_spaces] = '\0
-            memset(p, ' ', num_spaces) ; //pads remaining with spaces
+//             memmove(p + num_spaces, p, size); //shifts word over
+//             // p[size - 1 + num_spaces] = '\0
+//             memset(p, ' ', num_spaces) ; //pads remaining with spaces
 
-            x = 0; // new line 
+//             x = 0; // new line 
 
-        } else{
-            x += word_length_pix; //continue to increment acorss the line 
-        }
+//         } else{
+//             x += word_length_pix; //continue to increment acorss the line 
+//         }
 
         
-        p = word_end + num_spaces;
-    }
-}
+//         p = word_end + num_spaces;
+//     }
+// }
 
 
 void print_tft(char* buffer){  
@@ -208,24 +208,24 @@ void right_key(u16 x, u16 y, char c){
  * @param u16 x: current lcd coordinate
  * 
  */
-void scroll(char* buffer, char* p, int* line_offset){
+// void scroll(char* buffer, char* p, int* line_offset){
 
-    //char* p is the last thing fitting on the curr screen
-    //force a null terminator into the buffer in order so all the completed text will still be greyed out
-    char temp = *(p + 1);
-    *(p + 1) = '\0'; 
+//     //char* p is the last thing fitting on the curr screen
+//     //force a null terminator into the buffer in order so all the completed text will still be greyed out
+//     char temp = *(p + 1);
+//     *(p + 1) = '\0'; 
     
-    //start printing on offset. we know that this amount of data will fit with one line open
-    LCD_DrawTXT(0, 0, WHITE, GRAY, buffer + *line_offset, FONT_SIZE, 0);
+//     //start printing on offset. we know that this amount of data will fit with one line open
+//     LCD_DrawTXT(0, 0, WHITE, GRAY, buffer + *line_offset, FONT_SIZE, 0);
 
-    //overwrite null terminator and continue printing from here
-    *(p + 1) = temp; 
+//     //overwrite null terminator and continue printing from here
+//     *(p + 1) = temp; 
 
-    //print as much as you can on the new line. 
-    LCD_DrawTXT(0, MAX_LINES - 1, WHITE, BLACK, p + 1, FONT_SIZE, 0);
+//     //print as much as you can on the new line. 
+//     LCD_DrawTXT(0, MAX_LINES - 1, WHITE, BLACK, p + 1, FONT_SIZE, 0);
      
-    *line_offset = 0;
-}
+//     *line_offset = 0;
+// }
 
 /**
  * @example 
@@ -243,9 +243,11 @@ void increment(u16* x, u16* y, char* buffer, char** p, int* offset){
         //out of bounds, increment OR scroll
         if  (*y > lcddev.height - FONT_SIZE){
             
-            scroll(buffer, *p, offset); 
+            // scroll(buffer, *p, offset); 
+            //THIS WILL BE BUGGGGY ALL WE CAN DO IS PRAYYYY THAT NO ONE REACHES THIS CONDITINO AHAHAHAA
             *y -= LINE_HEIGHT; 
         } 
+        
         else{
             
             //if the beginning of the new ine
