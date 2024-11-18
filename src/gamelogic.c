@@ -95,15 +95,15 @@ void update_high_score(int high_score){
     FATFS fs; 
     char* buffer = malloc(sizeof('a') * 8);
 
-    //load file into .txt
+    // load file 
     FRESULT mount = f_mount(&fs, "", 1);
 
     FRESULT open = f_open(&fp, "hs.txt", FA_WRITE);
 
-    //store the high score in an external buffer
+    // store the high score in an external buffer
     sprintf(buffer, "%d", high_score);
 
-    UINT bw; //need this just in case you write to write more data than the buffer itself
+    UINT bw; // need this just in case you write to write more data than the buffer itself
     FRESULT result = f_write(&fp, buffer, strlen(buffer), &bw);
     
     
