@@ -15,7 +15,7 @@
 
 int volatile GAMETIME = 16; // needs to be set to 15 when the game starts, takes one second to initialize
 char buf[19];
-int HIGHSCORE = 180;  //for integration get_high_score();;
+//int HIGHSCORE = 180;  //for integration get_high_score();;
 
 void TIM7_IRQHandler(){
   TIM7->SR &= ~TIM_SR_UIF;
@@ -130,14 +130,14 @@ void spi1_display1(const char *string) {
 // The next 16 elements are 16 characters.
 // Element 17 is the command to set the cursor to the first position of line 2.
 //===========================================================================
-uint16_t display[34] = {
-        0x002, // Command to set the cursor at the first position line 1
-        0x200+'E', 0x200+'C', 0x200+'E', 0x200+'3', 0x200+'6', + 0x200+'2', 0x200+' ', 0x200+'i',
-        0x200+'s', 0x200+' ', 0x200+'t', 0x200+'h', + 0x200+'e', 0x200+' ', 0x200+' ', 0x200+' ',
-        0x0c0, // Command to set the cursor at the first position line 2
-        0x200+'c', 0x200+'l', 0x200+'a', 0x200+'s', 0x200+'s', + 0x200+' ', 0x200+'f', 0x200+'o',
-        0x200+'r', 0x200+' ', 0x200+'y', 0x200+'o', + 0x200+'u', 0x200+'!', 0x200+' ', 0x200+' ',
-};
+// uint16_t display[34] = {
+//         0x002, // Command to set the cursor at the first position line 1
+//         0x200+'E', 0x200+'C', 0x200+'E', 0x200+'3', 0x200+'6', + 0x200+'2', 0x200+' ', 0x200+'i',
+//         0x200+'s', 0x200+' ', 0x200+'t', 0x200+'h', + 0x200+'e', 0x200+' ', 0x200+' ', 0x200+' ',
+//         0x0c0, // Command to set the cursor at the first position line 2
+//         0x200+'c', 0x200+'l', 0x200+'a', 0x200+'s', 0x200+'s', + 0x200+' ', 0x200+'f', 0x200+'o',
+//         0x200+'r', 0x200+' ', 0x200+'y', 0x200+'o', + 0x200+'u', 0x200+'!', 0x200+' ', 0x200+' ',
+// };
 
 //===========================================================================
 // Configure the proper DMA channel to be triggered by SPI1_TX.
@@ -151,7 +151,7 @@ void spi1_setup_dma(void) {
     DMA1_Channel3 -> CCR &= ~DMA_CCR_EN;
 
     //set cmar to address of msg array
-    DMA1_Channel3 -> CMAR = (uint32_t)&display;
+    DMA1_Channel3 -> CMAR = (uint32_t)&buf;//display;
 
     //set cpar to addess of odr array
     DMA1_Channel3 -> CPAR = (uint32_t)&(SPI1 -> DR);
