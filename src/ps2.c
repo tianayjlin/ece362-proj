@@ -45,8 +45,8 @@ static char keycodes[128] = {
 void init_keyboard(){//configure gpio pins accordingly with ps2
     RCC -> AHBENR |= RCC_AHBENR_GPIOCEN;
     GPIOC -> MODER &= ~(GPIO_MODER_MODER1 | GPIO_MODER_MODER0); //setting PC1, PC0 as inputs
-    // GPIOC -> PUPDR &= ~(GPIO_PUPDR_PUPDR1);
-    // GPIOC -> PUPDR |= GPIO_PUPDR_PUPDR1_0;//setting as pull up for clock
+    GPIOC -> PUPDR &= ~(GPIO_PUPDR_PUPDR1);
+    GPIOC -> PUPDR |= GPIO_PUPDR_PUPDR1_0;//setting as pull up for clock
     //PC1-> clock, PC0-> data
 }
 
@@ -62,42 +62,42 @@ void init_exti (){ //interrupt when clock goes low
 }
 
 
-// uint16_t bit_bang_data(){ // bit bang 11 bits of data and output keycode?
-//     uint32_t portc = (GPIOC-> IDR & 0b1); //getting input data from PC0?
-//     uint16_t data;//11 bits of data
-//     //shifting in new data/overflow
-//     if(ind < 10){
-//         msg = (msg << 1) | portc; //shifting in new bit from data
-//         ind += 1;
-//     }
-//     else{//overflow
-//         ind = 0;
-//         data = (msg << 1) | portc; //setting 11 bits of data to check parity
-//         uint16_t chars = data & 0x3FC; //isolating the 8 data bits
-//         uint16_t reversed = reverseEnd(chars);
-//         int numOnes = 0;
-//         for (int i = 2; i< 10; i++){ //counting number of ones
-//             if ((data >> i) & 0x1){ //if digit at i is 1
-//                 numOnes  = numOnes ^ 0x1; //makes numOnes 1 if odd number, 0 if even number
-//             }
-//         }
-//         if(numOnes ^ ((data >> 1) & 0x1)){ //if numOnes is opposite of odd parity
-//             //good data
-//             return reversed;
-//         }
-//         msg = 0;
-//     }
-//         return -1;
-// }
-
 uint16_t bit_bang_data(){ // bit bang 11 bits of data and output keycode?
-    uint16_t data = 0;
-    for(int i = 0; i<12; i++){
-        data |= (GPIOC -> IDR & 0b1) << i;
-        nano_wait(62000);
+    uint32_t portc = (GPIOC-> IDR & 0b1); //getting input data from PC0?
+    uint16_t data;//11 bits of data
+    //shifting in new data/overflow
+    if(ind < 10){
+        msg = (msg << 1) | portc; //shifting in new bit from data
+        ind += 1;
     }
-    return data;
+    else{//overflow
+        ind = 0;
+        data = (msg << 1) | portc; //setting 11 bits of data to check parity
+        uint16_t chars = data & 0x3FC; //isolating the 8 data bits
+        uint16_t reversed = reverseEnd(chars);
+        int numOnes = 0;
+        for (int i = 2; i< 10; i++){ //counting number of ones
+            if ((data >> i) & 0x1){ //if digit at i is 1
+                numOnes  = numOnes ^ 0x1; //makes numOnes 1 if odd number, 0 if even number
+            }
+        }
+        if(numOnes ^ ((data >> 1) & 0x1)){ //if numOnes is opposite of odd parity
+            //good data
+            return reversed;
+        }
+        msg = 0;
+    }
+        return -1;
 }
+
+// uint16_t bit_bang_data(){ // bit bang 11 bits of data and output keycode?
+//     uint16_t data = 0;
+//     for(int i = 0; i<12; i++){
+//         data |= (GPIOC -> IDR & 0b1) << i;
+//         nano_wait(62000);
+//     }
+//     return data;
+// }
 
 void dummyTest(char key){
     if(key == 'a'){
@@ -128,8 +128,9 @@ void EXTI0_1_IRQHandler(){
     // if(key > 0){
     //     keyPress = keycodes[key];
     // }
-    msg = bit_bang_data();
     ind += 1;
+    msg = GPIOC -> IDR & 0b1; //input of pc0 (data)
+    // msg = bit_bang_data();
     // dummyTest(keyPress);
     
     //call game logic fxn for key presses?
