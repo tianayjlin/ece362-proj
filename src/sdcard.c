@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string.h>
+#include <math.h>
 
 #include "stm32f0xx.h"
 #include "ff.h"
@@ -12,7 +14,7 @@
 #define MAX_LINES LCD_H / FONT_SIZE
 #define LINE_HEIGHT FONT_SIZE
 #define CHAR_WIDTH FONT_SIZE / 2
-#define NUM_CHARS_PER_LINE lcddev.width - CHAR_WIDTH //minus to account for space
+#define X_MAX_CHARS_PIX LCD_W - CHAR_WIDTH //minus to account for space
 /**
  * ^Hardware Configurations
  * @fn init_spi1_slow(): confgigures SPI1, GPIOMODER/AFR regs
@@ -132,13 +134,58 @@ void get_file(const char* filename, char* buffer){
     FRESULT close = f_close(&fp);
     // FRESULT unmount = f_mount(NULL, "",  0);
     FRESULT unmount = f_unmount("");
+
+    pad_buffer(buffer, br);
 }
 
-void print_tft(const char* buffer){  
+
+void pad_buffer(char* buffer, UINT br){
+
+    u16 x = 0; //start from the left on screen
+    char* p = buffer; //file ptr 
+
+    while(*p && *p != '\0'){
+
+        char* word_end = p;
+        
+        //determine mem loc of end of word
+        while (*word_end && *word_end != ' ' && *word_end != '\n') {
+            word_end++;  
+        }
+
+        int word_char_count = ++word_end - p; // ++ accounts for space after the word 
+        int word_length_pix = word_char_count * CHAR_WIDTH;
+
+        //number of spaces until out of bounds
+        int num_spaces = 0; 
+
+        //checks to see if pixel offset is past the last one 
+        if(x + word_length_pix > X_MAX_CHARS_PIX){
+            
+            num_spaces = ceil((float)((LCD_W - x))/ CHAR_WIDTH);
+            int size = (int)(br) - (p - buffer); //size is number of stuff to move from p to end 
+
+            memmove(p + num_spaces, p, size); //shifts word over
+            // p[size - 1 + num_spaces] = '\0
+            memset(p, ' ', num_spaces) ; //pads remaining with spaces
+
+            x = 0; // new line 
+
+        } else{
+            x += word_length_pix; //continue to increment acorss the line 
+        }
+
+        
+        p = word_end + num_spaces;
+    }
+}
+
+
+void print_tft(char* buffer){  
     LCD_Setup(); 
     // enable_sdcard();
     LCD_Clear(BLACK);     
-    LCD_DrawTXT(0, 0, WHITE, BLACK, buffer, FONT_SIZE, 0);
+    LCD_DrawTXT(0, 0, WHITE , BLACK, buffer, FONT_SIZE, 0);
 }
 
 
@@ -184,25 +231,26 @@ void scroll(char* buffer, char* p, int* line_offset){
  * @example 
  * incrment(&x, &y, buffer, p, &offset), where p initially points to buffer
  */
-void increment(u16* x, u16* y, char* buffer, char* p, int* offset){
+void increment(u16* x, u16* y, char* buffer, char** p, int* offset){
 
     //wraparound for x (0 indexed)
-    *x = *x < NUM_CHARS_PER_LINE - 1 ? *x + CHAR_WIDTH : 0; 
+    *x = *x < X_MAX_CHARS_PIX - 1 ? *x + CHAR_WIDTH : 0; 
 
     //new line
+
     if(*x == 0){
         
         //out of bounds, increment OR scroll
         if  (*y > lcddev.height - FONT_SIZE){
             
-            scroll(buffer, p, offset); 
+            scroll(buffer, *p, offset); 
             *y -= LINE_HEIGHT; 
         } 
         else{
             
             //if the beginning of the new ine
             if(!(*offset)){
-                *offset = p + 1 - buffer;
+                *offset = *p + 1 - buffer;
             }
 
             *y += LINE_HEIGHT;
@@ -210,7 +258,7 @@ void increment(u16* x, u16* y, char* buffer, char* p, int* offset){
     }
 
     //increment the file ptr
-    p++;
+    *p++;    
 }
 
 

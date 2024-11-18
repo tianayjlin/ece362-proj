@@ -34,7 +34,8 @@ void init_lcd_spit();
  * @fn get_file(): loads filename 
  * @fn print_tft(): prints contents of a file loaded into buffer
  */
-void get_file(const char* filename, char* buffer); 
+void get_file(const char* filename, char* buffer);
+void pad_buffer(char* buffer, UINT br); 
 void print_tft(const char* buffer); 
 
 /**

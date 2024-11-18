@@ -36,7 +36,7 @@ void start_screen(){
 /**
  * @fn end_screen(): displays end screen with user speed
  */
-void end_screen(int total_chars, int s){
+int end_screen(int total_chars, int s){
     char* buffer = malloc(sizeof('a') * 64); 
     const char* filename = "end.txt"; 
 
@@ -49,6 +49,8 @@ void end_screen(int total_chars, int s){
     memset(buffer + 35, 0, sizeof(buffer));
     print_tft(buffer); 
     free(buffer); 
+
+    return (int) wpm; 
 }
 
 /**

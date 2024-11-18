@@ -80,7 +80,7 @@ void LCD_DrawChar(u16 x,u16 y,u16 fc, u16 bc, char num, u8 size, u8 mode);
 void LCD_DrawString(u16 x,u16 y, u16 fc, u16 bg, const char *p, u8 size, u8 mode);
 
 //OTHER FUNCTIONS 
-void LCD_DrawTXT(u16 x,u16 y, u16 fc, u16 bg, const char *buffer, u8 size, u8 mode);
+void LCD_DrawTXT(u16 x,u16 y, u16 fc, u16 bg, char *buffer, u8 size, u8 mode);
 
 //tft definitions 
 void tft_select(int val); 
