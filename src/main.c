@@ -24,13 +24,6 @@ int main (){
     internal_clock();
 
     init_all();
-
-
-    while(1) {
-        wrong_keypress_sound();
-        nano_wait(1000000000);
-    }
-    
-    
+ 
     return 0; 
 }
