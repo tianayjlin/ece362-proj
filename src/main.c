@@ -29,6 +29,12 @@ void init_all(){
 }
 
 int main (){
+    
+    internal_clock();
 
-    return 0;
+    init_all();
+    
+    
+    return 0; 
+
 }
