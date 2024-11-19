@@ -87,6 +87,7 @@ int main (){
         }
 
         increment(&x, &y, buffer, &p, &offset);
+        nano_wait(1000000000);
     } //take care of potentially garbage values, but this isn't what this test case is for
     #endif
 
