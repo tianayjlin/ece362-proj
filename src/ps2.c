@@ -28,7 +28,7 @@ static char keycodes[128] = {
 };
 
 
-void init_keyboard(){//configure gpio pins accordingly with ps2
+void init_keyboard(){//configure gpio pins accordingly with ps2 --> NEED TO REWIRE PS-2
     RCC -> AHBENR |= RCC_AHBENR_GPIOAEN;
     GPIOA -> MODER &= ~(GPIO_MODER_MODER8_0 | GPIO_MODER_MODER0); //setting PA0 as input
     GPIOA -> MODER |= GPIO_MODER_MODER8_1; //setting alt fxn for PA8
@@ -40,7 +40,9 @@ void setup_tim1(){
     RCC -> APB2ENR |= RCC_APB2ENR_TIM1EN; 
     // TIM1 -> CCMR1 &= ~TIM_CCMR1_CC1S_1; //CC1S:01 for input , mapped to TI1
     // TIM1 -> CCMR1 |= TIM_CCMR1_CC1S_0;
-    // //
+    // //IDK how to configure the tim1 to tim1_ch1 or if that's even needed
+    // //Ask about using a timer in capture mode to trigger an interrupt on the falling edge of a gpio pin
+    // //Also need to find the input filter duration, PS-2, takes 5-25 microseconds to transition from low to high/vice versa
     TIM1 -> CCER &= ~TIM_CCER_CC1NP; //CC1NP/CC1P = 01 for falling edge
     TIM1 -> CCER |= TIM_CCER_CC1P;
     TIM1 -> CCMR1 &= ~(TIM_CCMR1_IC1PSC); //enable capture at each valid transition
