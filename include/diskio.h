@@ -4,7 +4,7 @@
 
 #ifndef _DISKIO_DEFINED
 #define _DISKIO_DEFINED
-
+#include "ff.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -12,8 +12,11 @@ extern "C" {
 #include "ff.h"
 
 /* Status of Disk Functions */
-typedef BYTE	DSTATUS;
+typedef uint8_t BYTE;
+typedef uint8_t	DSTATUS;
 
+typedef unsigned int	UINT;
+typedef unsigned char	BYTE;
 /* Results of Disk Functions */
 typedef enum {
 	RES_OK = 0,		/* 0: Successful */
