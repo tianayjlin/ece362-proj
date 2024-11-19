@@ -7,7 +7,7 @@
 
 //INSERT FUNCTION DECLARATIONS HERE 
 void TIM7_IRQHandler(void);
-void write_display(void);//int total_chars, int s
+void write_display(int total_chars, int s);//
 void init_spi2(void);
 void spi_cmd(unsigned int data);
 void spi_data(unsigned int data);
