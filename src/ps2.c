@@ -38,9 +38,13 @@ void init_keyboard(){//configure gpio pins accordingly with ps2
 
 void setup_tim1(){
     RCC -> APB2ENR |= RCC_APB2ENR_TIM1EN; 
-    
-    TIM1 -> CCMR1 &= ~(TIM_CCMR1_IC1PSC); //enable capture at each valid transition
-    TIM1 -> CCER |= TIM_CCER_CC1E; //enable capture from counter into the capture register
-    TIM1 -> DIER |= TIM_DIER_CC1IE; //enable interrupt
+    // TIM1 -> CCMR1 &= ~TIM_CCMR1_CC1S_1; //CC1S:01 for input , mapped to TI1
+    // TIM1 -> CCMR1 |= TIM_CCMR1_CC1S_0;
+    // //
+    // TIM1 -> CCER &= ~TIM_CCER_CC1NP; //CC1NP/CC1P = 01 for falling edge
+    // TIM1 -> CCER |= TIM_CCER_CC1P;
+    // TIM1 -> CCMR1 &= ~(TIM_CCMR1_IC1PSC); //enable capture at each valid transition
+    // TIM1 -> CCER |= TIM_CCER_CC1E; //enable capture from counter into the capture register
+    // TIM1 -> DIER |= TIM_DIER_CC1IE; //enable interrupt
 }
 
