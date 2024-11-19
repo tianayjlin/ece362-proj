@@ -17,8 +17,11 @@ void init_all(){
 
 int main (){
 
-
-
+    internal_clock();
+    init_spi2();
+    spi2_init_oled();
+    //spi1_display1("hello");
+    setup_tim7();
 
 
 

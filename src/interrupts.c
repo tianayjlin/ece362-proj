@@ -15,7 +15,7 @@
 
 int volatile GAMETIME = 16; // needs to be set to 15 when the game starts, takes one second to initialize
 char buf[34];
-//int HIGHSCORE = 180;  //for integration get_high_score();;
+int highscore = 180;  //for integration get_high_score();;
 
 void TIM7_IRQHandler(){
   TIM7->SR &= ~TIM_SR_UIF;
@@ -28,7 +28,7 @@ void TIM7_IRQHandler(){
  * @param total_chars: total number of characters typed correctly 
  * @param s: length of typing test, in seconds
  */
-void write_display(int total_chars, int s) {
+void write_display() { //int total_chars, int s
 
   if(GAMETIME > 0){
     snprintf(buf, sizeof(buf), "%d ", GAMETIME);
@@ -38,11 +38,10 @@ void write_display(int total_chars, int s) {
   else
   {
     snprintf(buf, sizeof(1), "%d ", 0);
-    
     //int highscore = get_high_score(); 
     nano_wait(100000000);
-    snprintf(buf, sizeof(buf), "high score: %d wpm", highscore);
-    end_screen(total_chars, s);
+    snprintf(buf, sizeof(buf), "high score: %d", highscore);
+    //end_screen(total_chars, s);
     //end of game logic goes here
     return;
   }
