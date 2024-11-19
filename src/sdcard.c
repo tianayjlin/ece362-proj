@@ -8,6 +8,7 @@
 #include "fifo.h"
 #include "lcd.h"
 #include "diskio.h"
+#include "dac.h"
 
 #define BUFFER_SIZE 2048
 #define FONT_SIZE 16
@@ -147,6 +148,7 @@ void print_tft(char* buffer){
 
 void wrong_key(u16 x, u16 y, char c){
     LCD_DrawChar(x, y, WHITE, RED, c, FONT_SIZE, 0);
+    wrong_keypress_sound();
 }
 
 void right_key(u16 x, u16 y, char c){
