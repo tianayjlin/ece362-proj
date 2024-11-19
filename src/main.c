@@ -9,6 +9,8 @@
 #include "timer.h"
 #include "ps2.h"
 #include "interrupts.h"
+
+#include "dac.h"
 #include "gamelogic.h"
 #include "lcd.h"
 
@@ -22,7 +24,7 @@
 
 // #define TEST_START_SCREEN
 // #define TEST_PRINT
-#define TEST_SCROLLING
+// #define TEST_SCROLLING
 // #define TEST_HIGH_SCORE
 // #define TEST_OLED_LCD
 
@@ -48,10 +50,8 @@ void init_all(){
 int main (){
 
     internal_clock();
-
     init_all();
-
-
+    
     char *buffer = malloc(sizeof('a') * BUFFER_SIZE);
 
     #ifdef TEST_START_SCREEN
@@ -112,5 +112,4 @@ int main (){
 
     free(buffer);
     return 0; 
-
 }

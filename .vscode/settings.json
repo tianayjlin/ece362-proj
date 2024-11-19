@@ -3,6 +3,7 @@
         "stm32f0xx.h": "c",
         "diskio.h": "c",
         "stdio.h": "c",
+        "dac.h": "c,
         "gamelogic.h": "c",
         "ff.h": "c",
         "fifo.h": "c",
