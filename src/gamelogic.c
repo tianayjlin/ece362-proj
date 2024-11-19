@@ -11,6 +11,7 @@
 #include "diskio.h"
 #include "sdcard.h"
 #include "gamelogic.h"
+#include "timer.h"
 
 #define BUFFER_SIZE 2048
 #define FONT_SIZE 16
@@ -38,6 +39,8 @@ void start_screen(){
  * @fn end_screen(): displays end screen with user speed
  */
 int end_screen(int total_chars, int s){
+    disable_tim7();
+
     char* buffer = malloc(sizeof('a') * 64); 
     const char* filename = "end.txt"; 
 
@@ -76,14 +79,18 @@ char* pick_quote(){
  */
 int get_high_score(){
     
-    char* buffer = malloc(sizeof(3) * 3); 
+    char* buffer = malloc(sizeof('a') * 3); 
+    memset(buffer, '\0', 3);
+
     const char* filename = "hs.txt";
 
     get_file(filename, buffer);
     
     //convert string to int
+    int hs = atoi(buffer);
+
     free(buffer);
-    return atoi(buffer);
+    return hs;
 }
 
 /**

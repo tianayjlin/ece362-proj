@@ -6,6 +6,8 @@
         "gamelogic.h": "c",
         "ff.h": "c",
         "fifo.h": "c",
-        "lcd.h": "c"
+        "lcd.h": "c",
+        "timer.h": "c",
+        "sdcard.h": "c"
     }
 }

@@ -28,3 +28,8 @@ void init_tim15(void) {
   TIM15 -> CR1 |= TIM_CR1_CEN;
 
 }
+
+void disable_tim7(void){
+  TIM7 -> CR1  &= ~TIM_CR1_CEN;
+}
+

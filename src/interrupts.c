@@ -1,6 +1,9 @@
 #include "stm32f0xx.h"
+
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
+
 #include "interrupts.h"
 #include "timer.h"
 #include "ps2.h"
@@ -9,20 +12,25 @@
 #include "fifo.h"
 #include "lcd.h"
 #include "diskio.h"
-#include <string.h>
+#include "sdcard.h"
+#include "gamelogic.h"
+
+#define GAME_LENGTH 15
 
 //insert function definitions here
 
 int volatile GAMETIME = 16; // needs to be set to 15 when the game starts, takes one second to initialize
 char buf[34];
-//int highscore = 180;  //for integration get_high_score();;
+int correct; //TODO: FIX THIS
 
 void TIM7_IRQHandler(){
+
   TIM7->SR &= ~TIM_SR_UIF;
   GAMETIME -= 1;
-  write_display();
+  write_display(correct, GAME_LENGTH); //TODO: FIX THIS
   spi2_display1(buf);
-  }
+
+}
 
 /**
  * @param total_chars: total number of characters typed correctly 
@@ -37,20 +45,21 @@ void write_display(int total_chars, int s) { //
 
   else
   {
+    //finish timer
     snprintf(buf, sizeof(1), "%d ", 0);
+
+    //display high score
     int highscore = get_high_score(); 
     nano_wait(100000000);
     snprintf(buf, sizeof(buf), "high score: %d", highscore);
+
     end_screen(total_chars, s);
-    //end of game logic goes here
+
     return;
   }
 
 }
 
-//change tim7 to tim15 to
-
-//trigger dm UPDATE WITH TIM7
 
 void init_spi2() {
     RCC -> AHBENR |= RCC_AHBENR_GPIOBEN;
