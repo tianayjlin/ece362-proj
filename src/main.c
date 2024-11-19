@@ -22,7 +22,7 @@
 
 // #define TEST_START_SCREEN
 // #define TEST_PRINT
-// #define TEST_SCROLLING
+#define TEST_SCROLLING
 // #define TEST_HIGH_SCORE
 // #define TEST_OLED_LCD
 
@@ -59,7 +59,7 @@ int main (){
     #endif
 
     #ifdef TEST_PRINT
-
+    
     const char* filename = pick_quote();
     get_file(filename, buffer);
     print_tft(buffer);
@@ -67,14 +67,27 @@ int main (){
     #endif
 
     #ifdef TEST_SCROLLING
-    char* p = buffer + 552;
-    int offset = 27;
-    u16 x = 206;
-    u16 y = MAX_LINES;
+    const char* filename = pick_quote();
+    get_file(filename, buffer);
+    print_tft(buffer);
+
+    char* p = buffer;
+    int offset = 0;
+    u16 x = 0;
+    u16 y = 0;
+
     //top200_txt, for example, has 593 chars 
-    for(int i = 0; i < 593; i++){
+    while (*p && *p != '\0'){
+
+         //show that i can force every other key to be wrong or right. very modular! heheh
+        if ((x / 8) % 2){
+            wrong_key(x, y, *p);
+        } else {
+            right_key(x, y, *p);
+        }
+
         increment(&x, &y, buffer, &p, &offset);
-    }
+    } //take care of potentially garbage values, but this isn't what this test case is for
     #endif
 
     #ifdef TEST_HIGH_SCORE

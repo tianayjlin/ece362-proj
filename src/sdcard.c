@@ -153,14 +153,30 @@ void right_key(u16 x, u16 y, char c){
     LCD_DrawChar(x, y, WHITE, GRAY, c, FONT_SIZE, 0);
 }
 
+int calculate_word_length(const char* p){
+    
+    const char* word_end = p; 
+
+    while(*word_end && *word_end != ' ' && *word_end != '\0'){
+        word_end++;
+    }
+
+    //++to account for trailing space.
+    return ++word_end - p;
+}
 /**
  * @example 
  * incrment(&x, &y, buffer, p, &offset), where p initially points to buffer
  */
 void increment(u16* x, u16* y, char* buffer, char** p, int* offset){
 
-    //wraparound for x (0 indexed)
-    *x = *x < X_MAX_CHARS_PIX - 1 ? *x + CHAR_WIDTH : 0; 
+    //increment handles letters, but you have to implement wrap around for the next word
+    if(**p == ' '){
+        int word_length = calculate_word_length(*p + 1);
+        *x = *x + (word_length * CHAR_WIDTH) > X_MAX_CHARS_PIX ? 0 : *x + CHAR_WIDTH;
+    } else { 
+        *x += CHAR_WIDTH;
+    }
 
     //new line
     if(*x == 0){
@@ -185,7 +201,7 @@ void increment(u16* x, u16* y, char* buffer, char** p, int* offset){
     }
 
     //increment the file ptr
-    *p++;    
+    (*p)++;    
 }
 
 

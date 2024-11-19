@@ -46,6 +46,7 @@ void print_tft(const char* buffer);
  */
 void wrong_key(u16 x, u16 y, char c);
 void right_key(u16 x, u16 y, char c);
+void calculate_word_length(const char* p);
 void increment(u16* x, u16* y, char* buffer, char** p, int* offset); 
 
 #endif
