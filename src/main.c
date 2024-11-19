@@ -23,11 +23,11 @@
 #define NUM_CHARS_PER_LINE lcddev.width - CHAR_WIDTH
 
 // #define TEST_START_SCREEN
-#define TEST_PRINT
+// #define TEST_PRINT
 // #define TEST_SCROLLING
 // #define TEST_HIGH_SCORE
 // #define TEST_OLED_LCD
-// #define TEST_TYPING
+#define TEST_TYPING
 
 extern int volatile GAMETIME;
 extern int correct;
