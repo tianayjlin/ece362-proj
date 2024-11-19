@@ -45,8 +45,8 @@ static char keycodes[128] = {
 void init_keyboard(){//configure gpio pins accordingly with ps2
     RCC -> AHBENR |= RCC_AHBENR_GPIOCEN;
     GPIOC -> MODER &= ~(GPIO_MODER_MODER1 | GPIO_MODER_MODER0); //setting PC1, PC0 as inputs
-    GPIOC -> PUPDR &= ~(GPIO_PUPDR_PUPDR1);
-    GPIOC -> PUPDR |= GPIO_PUPDR_PUPDR1_0;//setting as pull up for clock
+    //GPIOC -> PUPDR &= ~(GPIO_PUPDR_PUPDR1);
+    //GPIOC -> PUPDR |= GPIO_PUPDR_PUPDR1_0;//setting as pull up for clock
     //PC1-> clock, PC0-> data
 }
 
