@@ -24,17 +24,25 @@ void TIM7_IRQHandler(){
   spi1_display1(buf);
   }
 
-void write_display() {
+/**
+ * @param total_chars: total number of characters typed correctly 
+ * @param s: length of typing test, in seconds
+ */
+void write_display(int total_chars, int s) {
+
   if(GAMETIME > 0){
     snprintf(buf, sizeof(buf), "%d ", GAMETIME);
     return;
   }
+
   else
   {
     snprintf(buf, sizeof(1), "%d ", 0);
-    //call high score function
+    
+    //int highscore = get_high_score(); 
     nano_wait(100000000);
-    snprintf(buf, sizeof(buf), "high score: %d wpm", HIGHSCORE);
+    snprintf(buf, sizeof(buf), "high score: %d wpm", highscore);
+    end_screen(total_chars, s);
     //end of game logic goes here
     return;
   }
