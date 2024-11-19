@@ -69,7 +69,7 @@ void TIM6_DAC_IRQHandler() {
   offset0 += step0;
 
 // if offset0 is >= (N << 16)   NVIC -> ISER[0] |= 1 << TIM6_IRQn;
-decrement offset0 by (N << 16)
+// decrement offset0 by (N << 16)
   if (offset0 >= (N << 16)) {
     offset0 -= (N << 16);
   }
