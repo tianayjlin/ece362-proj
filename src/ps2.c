@@ -29,11 +29,11 @@ static char keycodes[128] = {
 
 
 void init_keyboard(){//configure gpio pins accordingly with ps2
-    RCC -> AHBENR |= RCC_AHBENR_GPIOCEN;
-    GPIOC -> MODER &= ~(GPIO_MODER_MODER1 | GPIO_MODER_MODER0); //setting PC1, PC0 as inputs
-    //GPIOC -> PUPDR &= ~(GPIO_PUPDR_PUPDR1);
-    //GPIOC -> PUPDR |= GPIO_PUPDR_PUPDR1_0;//setting as pull up for clock
-    //PC1-> clock, PC0-> data
+    RCC -> AHBENR |= RCC_AHBENR_GPIOAEN;
+    GPIOA -> MODER &= ~(GPIO_MODER_MODER8_0 | GPIO_MODER_MODER0); //setting PA0 as input
+    GPIOA -> MODER |= GPIO_MODER_MODER8_1; //setting alt fxn for PA8
+    GPIOA -> AFR[1] |= GPIO_AFRH_AFRH2; //setting af2 (tim1_ch1) for PA8
+    //PA8-> clock, PA0-> data
 }
 
 void setup_tim1(){
@@ -41,10 +41,17 @@ void setup_tim1(){
     // TIM1 -> CCMR1 &= ~TIM_CCMR1_CC1S_1; //CC1S:01 for input , mapped to TI1
     // TIM1 -> CCMR1 |= TIM_CCMR1_CC1S_0;
     // //
-    // TIM1 -> CCER &= ~TIM_CCER_CC1NP; //CC1NP/CC1P = 01 for falling edge
-    // TIM1 -> CCER |= TIM_CCER_CC1P;
-    // TIM1 -> CCMR1 &= ~(TIM_CCMR1_IC1PSC); //enable capture at each valid transition
-    // TIM1 -> CCER |= TIM_CCER_CC1E; //enable capture from counter into the capture register
-    // TIM1 -> DIER |= TIM_DIER_CC1IE; //enable interrupt
+    TIM1 -> CCER &= ~TIM_CCER_CC1NP; //CC1NP/CC1P = 01 for falling edge
+    TIM1 -> CCER |= TIM_CCER_CC1P;
+    TIM1 -> CCMR1 &= ~(TIM_CCMR1_IC1PSC); //enable capture at each valid transition
+    TIM1 -> CCER |= TIM_CCER_CC1E; //enable capture from counter into the capture register
+    TIM1 -> DIER |= TIM_DIER_CC1IE; //enable interrupt
+    NVIC -> ISER[0] = 1 <<  TIM1_CC_IRQn;
+    TIM1 -> CR1 |= TIM_CR1_CEN;
+}
+
+void TIM1_CC_IRQHandler(){
+    TIM1 -> SR &= ~ TIM_SR_UIF;
+    //get data?
 }
 
