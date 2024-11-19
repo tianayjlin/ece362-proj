@@ -29,7 +29,7 @@ lcd_dev_t lcddev;
 
 // Set the CS pin low if val is non-zero.
 // Note that when CS is being set high again, wait on SPI to not be busy.
-static void tft_select(int val)
+void tft_select(int val)
 {
     if (val == 0) {
         while(SPI1->SR & SPI_SR_BSY);
@@ -49,7 +49,7 @@ static void tft_select(int val)
 }
 
 // If val is non-zero, set nRESET low to reset the display.
-static void tft_reset(int val)
+void tft_reset(int val)
 {
     if (val) {
         RESET_LOW;
@@ -59,7 +59,7 @@ static void tft_reset(int val)
 }
 
 // If
-static void tft_reg_select(int val)
+void tft_reg_select(int val)
 {
     if (val == 1) { // select registers
         DC_LOW; // clear
