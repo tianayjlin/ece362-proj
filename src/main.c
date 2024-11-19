@@ -127,6 +127,7 @@ int main (){
         for(int i = 0; i < top; i++){
             right_key(x, y, p); 
             increment(&x, &y, buffer, &p, &offset);
+            nano_wait(1000000000);
         }
         wrong_key(x, y, p); 
         

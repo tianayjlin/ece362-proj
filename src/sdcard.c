@@ -169,6 +169,8 @@ int calculate_word_length(const char* p){
 /**
  * @example 
  * incrment(&x, &y, buffer, p, &offset), where p initially points to buffer
+ * 
+ * @note increment should be paired with a nano wait for the human eye to sense the changes
  */
 void increment(u16* x, u16* y, char* buffer, char** p, int* offset){
 
