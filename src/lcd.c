@@ -937,7 +937,7 @@ void LCD_DrawString(u16 x,u16 y, u16 fc, u16 bg, const char *p, u8 size, u8 mode
  * @brief support wrap around on txt files and longer strings
 */
 void LCD_DrawTXT(u16 x,u16 y, u16 fc, u16 bg, char *p, u8 size, u8 mode){
-lcddev.select(1);
+    lcddev.select(1);
 
     u16 startX = x;               // Store the initial x position for line wrapping
     u16 charWidth = size / 2;     // Calculate the width of each character based on size
@@ -963,9 +963,10 @@ lcddev.select(1);
             }
         }
 
-        // account for the space
-        wordEnd++;
-        while (p < wordEnd) {
+        // account for the space only if its not the last char
+        if(!(*wordEnd)){ wordEnd--; }
+
+        while (p <= wordEnd) {
             _LCD_DrawChar(x, y, fc, bg, *p, size, mode);
             x += charWidth;
             p++;

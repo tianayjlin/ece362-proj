@@ -16,18 +16,21 @@
 #include "gamelogic.h"
 
 #define GAME_LENGTH 15
-
+#define BUF_SIZE 34
 //insert function definitions here
 
-int volatile GAMETIME = 16; // needs to be set to 15 when the game starts, takes one second to initialize
+// TO EXPORT
+int volatile GAMETIME = GAME_LENGTH + 1;
+int correct; 
+
+// static
 char buf[34];
-int correct; //TODO: FIX THIS
 
 void TIM7_IRQHandler(){
 
   TIM7->SR &= ~TIM_SR_UIF;
   GAMETIME -= 1;
-  write_display(correct, GAME_LENGTH); //TODO: FIX THIS
+  write_display(correct, GAME_LENGTH);
   spi2_display1(buf);
 
 }
@@ -39,19 +42,19 @@ void TIM7_IRQHandler(){
 void write_display(int total_chars, int s) { //
 
   if(GAMETIME > 0){
-    snprintf(buf, sizeof(buf), "%d ", GAMETIME);
+    snprintf(buf, BUF_SIZE, "%d ", GAMETIME);
     return;
   }
 
   else
   {
     //finish timer
-    snprintf(buf, sizeof(1), "%d ", 0);
+    snprintf(buf, sizeof('a') * 2, "%d ", 0);
 
     //display high score
     int highscore = get_high_score(); 
     nano_wait(100000000);
-    snprintf(buf, sizeof(buf), "high score: %d", highscore);
+    snprintf(buf, BUF_SIZE, "high score: %d", highscore);
 
     end_screen(total_chars, s);
 
@@ -98,10 +101,12 @@ void spi_cmd(unsigned int data) {
     SPI2->DR = data;
 
 }
+
 void spi_data(unsigned int data) {
     spi_cmd(data | 0x200);
     
 }
+
 void spi2_init_oled() {
     // wait 1 ms using nano_wait
     nano_wait(1000000);
@@ -126,6 +131,7 @@ void spi2_init_oled() {
 
     
 }
+
 void spi2_display1(const char *string) {
     spi_cmd(0x02);
     while (*string != '\0') {

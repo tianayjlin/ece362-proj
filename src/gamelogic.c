@@ -29,8 +29,7 @@ void start_screen(){
     const char* filename = "start.txt";
 
     get_file(filename, start_buffer);
-    memset(start_buffer + 20, 0, sizeof(start_buffer)); //force everything to be a null terminator bc im sick of this shit 
-    
+
     print_tft(start_buffer); 
     free(start_buffer); 
 }
@@ -41,6 +40,7 @@ void start_screen(){
 int end_screen(int total_chars, int s){
     disable_tim7();
 
+    int size = 64;
     char* buffer = malloc(sizeof('a') * 64); 
     const char* filename = "end.txt"; 
 
@@ -48,9 +48,8 @@ int end_screen(int total_chars, int s){
 
     float wpm = wpm_calculation(total_chars, s); 
 
-    sprintf(buffer + 32, "%d", (int)(wpm));
+    snprintf(buffer + 32, 3, "%d", (int)(wpm));
     
-    memset(buffer + 35, 0, sizeof(buffer));
     print_tft(buffer); 
     free(buffer); 
 
@@ -100,7 +99,9 @@ void update_high_score(int high_score){
  
     FIL fp;
     FATFS fs; 
-    char* buffer = malloc(sizeof('a') * 8);
+
+    int size = 4;
+    char* buffer = malloc(sizeof('a') * size);
 
     // load file 
     FRESULT mount = f_mount(&fs, "", 1);
@@ -108,7 +109,7 @@ void update_high_score(int high_score){
     FRESULT open = f_open(&fp, "hs.txt", FA_WRITE);
 
     // store the high score in an external buffer
-    sprintf(buffer, "%d", high_score);
+    snprintf(buffer, size, "%d", high_score);
 
     UINT bw; // need this just in case you write to write more data than the buffer itself
     FRESULT result = f_write(&fp, buffer, strlen(buffer), &bw);

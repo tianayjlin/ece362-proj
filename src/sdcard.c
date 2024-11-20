@@ -126,6 +126,9 @@ void get_file(const char* filename, char* buffer){
     UINT br; //records the total amount of bytes read
     FRESULT read = f_read(&fp, buffer, BUFFER_SIZE, &br);
     
+    //STUPID FREAD DOESN'T PAD WITH NULL TERMINATOR
+    buffer[br] = '\0';
+
     //"fclose"
     FRESULT close = f_close(&fp);
     FRESULT unmount = f_unmount("");
