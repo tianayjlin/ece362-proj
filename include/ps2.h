@@ -4,5 +4,6 @@
 //INSERT FUNCTION DECLARATIONS HERE 
 // void init_keyboard();
 void setup_tim1();
+void keyChar(uint16_t msg);
 void TIM1_CC_IRQHandler();
 #endif

@@ -4,6 +4,7 @@
 //insert function definitions here 
 int ind = 0;
 uint16_t msg = 0;
+char test;
 
 static char keycodes[128] = {
     0,   27,  '1', '2', '3', '4', '5', '6', '7', '8', '9',  '0', '-',  '=',  '\b', '\t',                                                    /* <-- Tab */
@@ -71,12 +72,13 @@ void setup_tim1(){
     TIM1 -> CCER |= TIM_CCER_CC1P;//setting trigger to falling edge: CC1NP/CC1P = 01
     TIM1 -> CCER |= TIM_CCER_CC1E; //enable capture from counter into the capture register
     
-    TIM1 -> PSC = 10 -1;//480kHz
+    TIM1 -> PSC = 15 -1;//480kHz
     TIM1 -> ARR = 10-1;
     TIM1 -> SMCR &= ~TIM_SMCR_SMS;
     TIM1 -> SMCR |= TIM_SMCR_TS; //setting TS: 111 External trigger input
+    TIM1 -> CCMR1 &= ~(TIM_CCMR1_IC1PSC); //enable capture at each valid transition??
     TIM1 -> SMCR &= ~TIM_SMCR_ETF;
-    TIM1 -> SMCR |= TIM_SMCR_ETF_1;//setting external trigger filter to 0010: 4 cycles
+    TIM1 -> SMCR |= TIM_SMCR_ETF_2 | TIM_SMCR_ETF_0;//setting external trigger filter to 0101: 8 cycles
     TIM1 -> DIER |= TIM_DIER_CC1IE; //enable interrupt
     NVIC -> ISER[0] = 1 <<  TIM1_CC_IRQn;
     TIM1 -> CR1 |= TIM_CR1_CEN;//enable
@@ -84,11 +86,24 @@ void setup_tim1(){
    
 }
 
+void keyChar(uint16_t msg){
+    switch (msg){
+        case 56:
+            test = 'a';
+            break;
+    }
+        
+}
+
 void TIM1_CC_IRQHandler(){
     TIM1 -> SR &= ~ TIM_SR_CC1IF; //clearing interrupt flag
-    //get data?
+    // TIM1 -> SR &= ~TIM_SR_UIF;
     ind += 1;
-    //printf("hi");
     msg = (msg << 1) | (GPIOA -> IDR & 0b1);//input of PA0
+    if(ind % 33 == 0){
+        msg = (msg & 0b11111111100) >> 2; //isolating data bits
+        keyChar(msg);
+    }
+    
 }
 
