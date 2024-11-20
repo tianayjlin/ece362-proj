@@ -113,23 +113,33 @@ int main (){
     #endif
 
     #ifdef TEST_TYPING 
-    
-        const char* filename = pick_quote();
-        get_file(filename, buffer);
-        print_tft(buffer);
+    #ifdef TEST_TYPING
+  
+       const char* filename = pick_quote();
+       get_file(filename, buffer);
+       print_tft(buffer);
 
-        char* p = buffer;
-        int offset = 0;
-        u16 x = 0;
-        u16 y = 0;
+       char* p = buffer;
+       int offset = 0;
+       u16 x = 0;
+       u16 y = 0;
 
-        int top = rand() % 99;
-        for(int i = 0; i < top; i++){
-            right_key(x, y, p); 
-            increment(&x, &y, buffer, &p, &offset);
-            nano_wait(1000000000);
-        }
-        wrong_key(x, y, p); 
+       while (1) {
+           int top = 7;
+           for(int i = 0; i < top; i++){
+               right_key(x, y, *p);
+               increment(&x, &y, buffer, &p, &offset);
+               nano_wait(100000000);
+           }
+           wrong_key(x, y, *p);
+       }
+
+       while (1) {
+           wrong_keypress_sound();
+           nano_wait(100000000);
+       }
+      
+   #endif
         
     #endif
 
