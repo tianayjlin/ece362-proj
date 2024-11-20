@@ -27,6 +27,7 @@
 // #define TEST_SCROLLING
 // #define TEST_HIGH_SCORE
 // #define TEST_OLED_LCD
+#define TEST_TYPING
 
 extern int volatile GAMETIME;
 extern int correct;
@@ -34,10 +35,11 @@ extern int correct;
 void internal_clock();
 
 void init_all(){
-    //TODO change with navya's systick timer seed
-    srand(time(NULL));
-    // LCD_Clear(BLACK);
 
+    //make sure srand is 
+    srand(tim6_seed());
+    
+    //figure out how to clear screen without infinite loop,
     #ifdef TEST_OLED_LCD
 
     init_spi2();
@@ -109,6 +111,38 @@ int main (){
     #ifdef TEST_OLED_LCD 
         correct = 100;
     #endif
+
+    #ifdef TEST_TYPING 
+    #ifdef TEST_TYPING
+  
+       const char* filename = pick_quote();
+       get_file(filename, buffer);
+       print_tft(buffer);
+
+       char* p = buffer;
+       int offset = 0;
+       u16 x = 0;
+       u16 y = 0;
+
+       while (1) {
+           int top = 7;
+           for(int i = 0; i < top; i++){
+               right_key(x, y, *p);
+               increment(&x, &y, buffer, &p, &offset);
+               nano_wait(100000000);
+           }
+           wrong_key(x, y, *p);
+       }
+
+       while (1) {
+           wrong_keypress_sound();
+           nano_wait(100000000);
+       }
+      
+   #endif
+        
+    #endif
+
 
     free(buffer);
     return 0; 
