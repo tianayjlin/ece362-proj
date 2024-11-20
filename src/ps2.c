@@ -47,12 +47,12 @@ void setup_tim1(){
     GPIOA -> AFR[1] &= ~0xF;
     GPIOA -> AFR[1] |= 2; //setting af2 (tim1_ch1) for PA8
     //PA8-> clock, PA0-> data 
-    TIM1 -> CR2 &= ~TIM_CR2_TI1S;//setting tim1_ch1 to ti1 input
+    // TIM1 -> CR2 &= ~TIM_CR2_TI1S;//setting tim1_ch1 to ti1 input
     TIM1 -> CCMR1 &= ~TIM_CCMR1_CC1S_1; //CC1S:01 for input , mapped to TI1
     TIM1 -> CCMR1 |= TIM_CCMR1_CC1S_0;
     TIM1 -> PSC = 10 -1;//480kHz
     TIM1 -> ARR = 10-1; 
-
+    TIM1 -> SMCR &= ~TIM_SMCR_TS; //trigger selection for internal trigger
 //     // //IDK how to configure the tim1 to tim1_ch1 or if that's even needed
 //     // //Ask about using a timer in capture mode to trigger an interrupt on the falling edge of a gpio pin
 //     // //Also need to find the input filter duration, PS-2, takes 5-25 microseconds to transition from low to high/vice versa
