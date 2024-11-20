@@ -91,7 +91,86 @@ void keyChar(uint16_t msg){
         case 56:
             test = 'a';
             break;
+        case 76:
+            test = 'b';
+            break;
+        case 132:
+            test = 'c';
+            break;
+        case 196:
+            test = 'd';
+            break;
+        case 36:
+            test = 'e';
+            break;
+        case 212:
+            test = 'f';
+            break;
+        case 44:
+            test = 'g';
+            break;
+        case 204:
+            test = 'h';
+            break;
+        case 194:
+            test = 'i';
+            break;
+        case 220:
+            test = 'j';
+            break;
+        case 66:
+            test = 'k';
+            break;
+        case 210:
+            test = 'l';
+            break;
+        case 92:
+            test = 'm';
+            break;
+        case 140:
+            test = 'n';
+            break;
+        case 34:
+            test = 'o';
+            break;
+        case 178:
+            test = 'p';
+            break;
+        case 168:
+            test = 'q';
+            break;
+        case 180:
+            test = 'r';
+            break;
+        case 216:
+            test = 's';
+            break;
+        case 52:
+            test = 't';
+            break;
+        case 60:
+            test = 'u';
+            break;
+        case 84:
+            test = 'v';
+            break;
+        case 184:
+            test = 'w';
+            break;
+        case 68:
+            test = 'x';
+            break;
+        case 172:
+            test = 'y';
+            break;
+        case 88:
+            test = 'z';
+            break;
+        case 148:
+            test = ' ';
+            break;
     }
+
         
 }
 
