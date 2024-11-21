@@ -6,16 +6,6 @@ int ind = 0;
 uint16_t msg = 0;
 char test;
 
-
-
-// void init_keyboard(){//configure gpio pins accordingly with ps2 --> NEED TO REWIRE PS-2
-//     RCC -> AHBENR |= RCC_AHBENR_GPIOAEN;
-//     GPIOA -> MODER &= ~(GPIO_MODER_MODER8_0 | GPIO_MODER_MODER0); //setting PA0 as input
-//     GPIOA -> MODER |= GPIO_MODER_MODER8_1; //setting alt fxn for PA8
-//     GPIOA -> AFR[1] |= GPIO_AFRH_AFRH2; //setting af2 (tim1_ch1) for PA8
-//     //PA8-> clock, PA0-> data
-// }
-
 void setup_tim1(){
     RCC -> APB2ENR |= RCC_APB2ENR_TIM1EN;
      RCC -> AHBENR |= RCC_AHBENR_GPIOAEN;
