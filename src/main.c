@@ -35,10 +35,11 @@ extern int correct;
 void internal_clock();
 
 void init_all(){
-
-    //make sure srand is 
-    srand(tim6_seed());
     
+  //make sure srand is 
+    srand(tim6_seed());
+    setup_tim1();
+  
     //figure out how to clear screen without infinite loop,
     #ifdef TEST_OLED_LCD
 
@@ -47,13 +48,12 @@ void init_all(){
     setup_tim7();
 
     #endif
-}
 
 int main (){
 
     internal_clock();
     init_all();
-    
+
     char *buffer = malloc(sizeof('a') * BUFFER_SIZE);
 
     #ifdef TEST_START_SCREEN
