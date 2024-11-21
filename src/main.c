@@ -80,7 +80,8 @@ void init_all(){
                 //start test
                 enable_tim7();
                 
-                loaded = 1;
+                loaded = 1; 
+                nack = 0; 
             }
         }
 
@@ -216,7 +217,9 @@ int main (){
     #endif
 
     #ifdef FINAL_DEMO
+
         demo();
+        
     #endif
 
     // free(buffer);
