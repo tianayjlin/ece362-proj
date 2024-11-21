@@ -10,7 +10,7 @@
 #include "diskio.h"
 #include "dac.h"
 
-#define BUFFER_SIZE 2048
+#define BUFFER_SIZE 4096
 #define FONT_SIZE 16
 #define MAX_LINES LCD_H / FONT_SIZE
 #define LINE_HEIGHT FONT_SIZE

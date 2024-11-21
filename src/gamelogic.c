@@ -48,6 +48,7 @@ int end_screen(int total_chars, int s){
 
     float wpm = wpm_calculation(total_chars, s); 
 
+    
     sprintf(buffer + 32, "%d", (int)(wpm));
     
     memset(buffer + 35, 0, sizeof(buffer));
@@ -80,7 +81,6 @@ char* pick_quote(){
 int get_high_score(){
     
     char* buffer = malloc(sizeof('a') * 3); 
-    memset(buffer, '\0', 3);
 
     const char* filename = "hs.txt";
 
@@ -88,6 +88,7 @@ int get_high_score(){
     
     //convert string to int
     int hs = atoi(buffer);
+
 
     free(buffer);
     return hs;
@@ -100,15 +101,23 @@ void update_high_score(int high_score){
  
     FIL fp;
     FATFS fs; 
-    char* buffer = malloc(sizeof('a') * 8);
+    char* buffer = malloc(sizeof('a') * 3);
 
     // load file 
     FRESULT mount = f_mount(&fs, "", 1);
 
     FRESULT open = f_open(&fp, "hs.txt", FA_WRITE);
+    
+    int hs0 = high_score % 10;
+    int hs1 = (high_score / 10) % 10;
+    int hs2 = high_score / 100;
 
     // store the high score in an external buffer
-    sprintf(buffer, "%d", high_score);
+    memset(buffer, ' ', 3);
+    sprintf(buffer + 2, "%d", hs0);
+    sprintf(buffer + 1, "%d", hs1); 
+    sprintf(buffer, "%d", hs2);
+    
 
     UINT bw; // need this just in case you write to write more data than the buffer itself
     FRESULT result = f_write(&fp, buffer, strlen(buffer), &bw);

@@ -39,26 +39,40 @@ void TIM7_IRQHandler(){
 void write_display(int total_chars, int s) { //
 
   if(GAMETIME > 0){
-    snprintf(buf, sizeof(buf), "%d ", GAMETIME);
+    snprintf(buf, sizeof('a'), "%d ", GAMETIME);
     return;
   }
 
   else
   {
     //finish timer
-    snprintf(buf, sizeof(1), "%d ", 0);
+    // snprintf(buf, sizeof("a"), "%d", 0);
+
+    memset(buf, ' ', 34);
 
     //display high score
-    int highscore = get_high_score(); 
+    int hs = get_high_score();
+    int wpm = wpm_calculation(total_chars, s);
+
+    if(hs < wpm){
+        update_high_score(wpm);
+    }
+    
+    hs = wpm;
+    
+    int hs0 = hs % 10;
+    int hs1 = (hs / 10) % 10;
+    int hs2 = hs / 100;
+
     nano_wait(100000000);
-    snprintf(buf, sizeof(buf), "high score: %d", highscore);
+    snprintf(buf, sizeof(buf), "high score: %d%d%d", hs2, hs1, hs0);
 
     end_screen(total_chars, s);
 
     return;
   }
-
 }
+
 
 
 void init_spi2() {
