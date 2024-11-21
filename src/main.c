@@ -48,7 +48,7 @@ void init_all(){
     setup_tim7();
 
     #endif
-
+}
 int main (){
 
     internal_clock();
