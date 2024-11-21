@@ -30,7 +30,7 @@
 // #define TEST_HIGH_SCORE // display and update high score
 // #define TEST_OLED_LCD // integration with OLED 
 // #define TEST_DAC //integraTion with dac for wrong keypress 
-#define DEMO1 
+// #define DEMO1 
 
 extern int volatile GAMETIME;
 extern int correct;
@@ -73,7 +73,7 @@ void demo1(){
     print_tft(buffer);
     enable_tim7(); //start game upon user space bar press
 
-
+    
     /*TESTING 80 wpm user*/
     char* user = user_buffer; 
     char* p = buffer;
@@ -81,7 +81,7 @@ void demo1(){
     u16 x = 0;
     u16 y = 0;
 
-    while (*user){
+    while (*user && GAMETIME > 0){
 
         if(*user == *p){
             right_key(x, y, *p);
@@ -92,15 +92,15 @@ void demo1(){
             wrong_key(x, y, *p); 
         }
 
-        nano_wait(126000000); //emulates speed of 80 wpm
+        nano_wait(125000000); //emulates speed of 80 wpm
         user++; //next key press
     }
     
+    nano_wait(300000000);
+
     //not calling necessary 
     free(user_buffer); 
     free(buffer);
-
-    end_screen(correct, 15);
 }
 
 /*=============END DECLARATIONS===============*/

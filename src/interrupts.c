@@ -52,7 +52,8 @@ void write_display(int total_chars, int s) { //
     snprintf(buf, sizeof('a') * 2, "%d ", 0);
 
     //display high score
-    int highscore = get_high_score(); 
+    int highscore = get_high_score();
+ 
     nano_wait(100000000);
     snprintf(buf, BUF_SIZE, "high score: %d", highscore);
 
