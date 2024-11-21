@@ -27,10 +27,18 @@
 // #define TEST_SCROLLING
 // #define TEST_HIGH_SCORE
 // #define TEST_OLED_LCD
-#define TEST_TYPING
+// #define TEST_TYPING
+#define FINAL_DEMO
 
+// OLED TIMER VARS
 extern int volatile GAMETIME;
 extern int correct;
+
+// PS2 VARS
+extern int ind; 
+extern char test;
+extern u16 msg;
+extern int nack;
 
 void internal_clock();
 
@@ -41,20 +49,84 @@ void init_all(){
     setup_tim1();
   
     //figure out how to clear screen without infinite loop,
-    #ifdef TEST_OLED_LCD
+    #if defined(TEST_OLED_LCD) || defined(FINAL_DEMO)
 
     init_spi2();
     spi2_init_oled();
     setup_tim7();
+    update_high_score(10);
 
     #endif
 }
+
+#ifdef FINAL_DEMO
+    void demo(){
+
+        start_screen();
+
+        char* buffer = malloc(sizeof('a') * BUFFER_SIZE);
+        
+        int loaded = 0;
+
+        while (!loaded){   
+            
+            if(test == ' '){
+                
+                //load the screen with random prompt
+                char* filename = pick_quote();
+                get_file(filename, buffer);
+                print_tft(buffer); 
+
+                //start test
+                enable_tim7();
+                
+                loaded = 1;
+            }
+        }
+
+        char* p = buffer; 
+        int offset = 0; 
+        u16 x = 0; 
+        u16 y = 0;
+
+        while(loaded && GAMETIME > 0){
+
+            //if need to acknowledge a new keypress
+            if(nack){
+
+                if(test == *p){
+
+                    correct++; 
+                    right_key(x, y, *p);
+                    increment(&x, &y, buffer, &p, &offset); 
+
+                } else { 
+
+                    wrong_key(x, y, *p);
+
+                }
+
+                nack = 0; //finished logic on current key press
+            }
+        }
+
+
+        //timer handler automatically calls end screen
+        
+        free(buffer);
+    }
+    
+#endif
+
+
+
+
 int main (){
 
     internal_clock();
     init_all();
 
-    char *buffer = malloc(sizeof('a') * BUFFER_SIZE);
+    // char *buffer = malloc(sizeof('a') * BUFFER_SIZE);
 
     #ifdef TEST_START_SCREEN
         start_screen(); 
@@ -143,7 +215,10 @@ int main (){
         
     #endif
 
+    #ifdef FINAL_DEMO
+        demo();
+    #endif
 
-    free(buffer);
+    // free(buffer);
     return 0; 
 }

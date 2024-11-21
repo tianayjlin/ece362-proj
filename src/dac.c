@@ -77,7 +77,7 @@ void TIM6_DAC_IRQHandler() {
 // int samp = sum of wavetable[offset0>>16] and wavetable[offset1>>16]
   int samp = wavetable[offset0>>16];
 // multiply samp by volume
-  samp *= 2000; //0-4095
+  samp *= 1000; //0-4095
 
 // shift samp right by 17 bits to ensure it's in the right format for `DAC_DHR12R1` 
   samp = samp >> 17;

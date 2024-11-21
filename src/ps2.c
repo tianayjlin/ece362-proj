@@ -121,6 +121,8 @@ void keyChar(uint16_t msg){ //translating data to ascii char
         
 }
 
+int nack = 0;
+
 void TIM1_CC_IRQHandler(){
     TIM1 -> SR &= ~ TIM_SR_CC1IF; //clearing interrupt flag
     ind += 1;
@@ -128,6 +130,7 @@ void TIM1_CC_IRQHandler(){
     if(ind % 33 == 0){ //when letter is pressed
         msg = (msg & 0b11111111100) >> 2; //isolating data bits
         keyChar(msg);
+        nack = 1;
     }
     
 }
